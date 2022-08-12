@@ -14,8 +14,6 @@ There is no guarantee outlined solutions will work, use everything at your own r
 
     In case you are the kind of person owning a personal 747, and you're in desperate need to solve an urgent problem regarding Magnolia CMS, please contact me directly, day and night!
 
-Please do not make use of the content of this site if you don't like dogs.
-
 If you are looking for instructions about how to find magic mushrooms in the wild, this is the wrong place.
 
 Perkele!
