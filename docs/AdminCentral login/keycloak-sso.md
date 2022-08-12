@@ -13,15 +13,15 @@ description: Documentaton and sample about Magnolia AdminCentral login with Keyc
 
 !!! caution
 
-    If you are new to the most recent Keycloak distributions based on Quarkus,or if you just upgraded from a WildFly distribution, there are some things you have to consider. You can find more information on the [Migrating to Quarkus distribution](https://www.keycloak.org/migration/migrating-to-quarkus) pages.
+    If you are new to the most recent Keycloak distributions based on Quarkus, or if you just upgraded from a WildFly distribution, there are some things you have to consider. You can find more information on the [Migrating to Quarkus distribution](https://www.keycloak.org/migration/migrating-to-quarkus) pages.
 
 ### Most important changes in Keycloak to consider
 
-I am not covering changes like how to load configuration at startup time etc, just critical changes regarding the integration with Magnolia SSO.
+I am not covering changes like how to load configuration at startup time etc., just critical changes regarding the integration with Magnolia SSO.
 
-#### New default context path (without"/auth")
+#### New default context path (without “/auth”)
 
-Former URLs like the value used for *oidc.discoveryUri* will not work any longer because the "/auth" part has been removed.
+Former URLs like the value used for *oidc.discoveryUri* will not work any longer because the “/auth” part has been removed.
 
 Instead of
 
@@ -35,18 +35,18 @@ use
 
 !!! tip
 
-    If you still want/must use the old format (maybe for additional clients you connect to Keycloak), you can start the server with the **http-relative-path** flag, like `bin/kc.[sh|bat] start-dev --http-relative-path /auth`
+    If you still want/must use the old format (maybe for additional clients you connect to Keycloak), you can start the server with the **http-relative-path** flag, like `bin/kc.[sh|bat] start-dev --http-relative-path /auth`.
 
 #### Adding group membership to the token in Keycloak
 
-To be able to apply appropriate permissions on Magnolia AdminCentral, an exernal user needs to "bring" some information about group- (role-) memberships after authentication. Otherwise the Magnolia backend would not be able to resolve correct roles and ACLs.
+To be able to apply appropriate permissions on Magnolia AdminCentral, an external user needs to “bring” some information about group- (role-) memberships after authentication. Otherwise, the Magnolia backend would not be able to resolve correct roles and ACLs.
 
 As the Keycloak administration interface has slightly changed with recent versions, some user might not be able to follow along existing documentation.
 
 **Add group memberships of a user to an ID token:**
 
 - In Keycloak, select your **realm** and the client you want to configure (like *magnoliaAuthor*).
-- Choose **Client scopes** => click on **clientName-dedicated**.
+- Choose **Client scopes** → click on **clientName-dedicated**.
 
 ![Add client scope](_img/keycloak-sso/01_kc_client_add_scope.png)
 
@@ -110,7 +110,7 @@ authenticationService:
 
 !!! caution
 
-    This example does not have the leading "/" before the group names like shown in the [Magnolia SSO documentation](https://docs.magnolia-cms.com/magnolia-sso/2.0.5/index.html). In former Keycloak versions, there was the default option **"Full group path"** in the protocol mapper (for including the groups claim in the token). As there is no use for Magnolia to receive a single string with several group names, this option is not needed. 
+    This example does not have the leading “/” before the group names, as shown in the [Magnolia SSO documentation](https://docs.magnolia-cms.com/magnolia-sso/2.0.5/index.html). In former Keycloak versions, there was the default option **“Full group path”** in the protocol mapper (for including the groups claim in the token). As there is no use for Magnolia to receive a single string with several group names, this option is not needed. 
     But if you somehow still are using "full path" groups, then the **mapping in config.yaml** must be adjusted (*/superusers* instead of superusers and */travel-demo-editors* instead of *travel-demo-editors*).
 
 ---
@@ -134,7 +134,7 @@ or make use of the [Log Tools app](https://docs.magnolia-cms.com/product-docs/6.
 
     Do not enable debug logging for security related data in productive environments. If you are forced to enable it, remember to turn it off immediately after use.
     
-After getting detailled output for Magnolia SSO, you can track down the problem of a failed setup. For example, to see if and hiw the groups information was added to the user's token after authentication, you could search for **status=200** or for **profile:** and check the data:
+After getting detailed output for Magnolia SSO, you can track down the problem of a failed setup. For example, to see if and how the groups information was added to the user's token after authentication, you could search for **status=200** or for **profile:** and check the data:
 
 **Token response: status=200, content=**
 
@@ -150,4 +150,4 @@ After getting detailled output for Magnolia SSO, you can track down the problem 
 
 !!! tip
 
-    Use a tool like [JWT.IO](https://jwt.io) to inspect OpenID Connect JWT token data (in the example above the value for "id_token").
+    Use a tool like [JWT.IO](https://jwt.io) to inspect OpenID Connect JWT token data (in the example above the value for “id_token”).
