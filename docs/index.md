@@ -1,9 +1,5 @@
 # Welcome
 
-!!! danger
-
-    Please do not make use of the content of this site if you don't like dogs.
-
 ![Welcome dog](_img/bn_glasses.jpg)
 
 Here you can find how-tos and samples for Magnolia CMS. The current topic is how to integrate Magnolia AdminCentral using the Magnolia SSO module with an Identity Provider like Keycloak.
