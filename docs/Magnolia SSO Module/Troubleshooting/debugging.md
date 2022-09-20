@@ -1,11 +1,11 @@
 ---
-title: Troubleshooting
-description: Handle common problems when using Magnolia SSO.
+title: Debugging
+description: Trace problems and erros when using Magnolia SSO.
 ---
 
-# Troubleshooting and debugging
+# Problem and error tracing
 
-![Debug dog](_img/troubleshooting/bn_wet.jpg)
+![Debug dog](_img/debugging/bn_wet.jpg)
 
 ## Enable debug log output
 

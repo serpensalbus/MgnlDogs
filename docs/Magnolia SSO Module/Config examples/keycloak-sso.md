@@ -1,13 +1,13 @@
 ---
-title: Keycloak and Magnolia SSO
-description: Documentaton and sample about Magnolia AdminCentral login with Keycloak (Quarkus)
+title: Keycloak
+description: Documentation and sample about Magnolia AdminCentral login with Keycloak (Quarkus)
 ---
 
-# Magnolia SSO and Keycloak (Quarkus)
+# Magnolia SSO and Keycloak on Quarkus
 
 !!! info
 
-    Samples and descriptions are based on **Magnolia CMS 6.2.21**, **Magnolia SSO 2.0.4** and **Keycloak 19.0.1**.
+    Samples and descriptions are based on **Magnolia CMS 6.2.23**, **Magnolia SSO 2.0.6** and **Keycloak 19.0.1**.
 
 ## Using a recent Keycloak distribution
 
