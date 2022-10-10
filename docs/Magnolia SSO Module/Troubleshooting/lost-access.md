@@ -17,7 +17,7 @@ If you did not follow previous advice: You need to re-gain access to a blocked M
 
 The recommended way to re-gain access to Magnolia AdminCentral is to use a fake server, which lets you access Magnolia with any user / password combination and always applies the **superuser role** to this account.
 
-You can find a guide about how to use a mock server in [Magnolia documentation](https://docs.magnolia-cms.com/magnolia-sso/3.0.0/guides/using-a-mock-oidc-server.html).
+You can find a guide about how to use a mock server in [Magnolia documentation](https://docs.magnolia-cms.com). Search for "mock server".
 
 You might have to adjust the example on the documentation page to work with your environment and the version of the Magnolia SSO module that you actually use.
 

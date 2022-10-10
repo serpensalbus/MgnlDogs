@@ -75,7 +75,7 @@ Previous client settings would be enough if authenticated users would all have t
 Therefore, we need to add information about group memberships of a user to the OpenID Connect token payload. The Magnolia SSO module later can extract and parse this information from token data and compile permissions for an authenticated user account.
 
 !!! example
-    Lookup detailed information in the document [adding-group-membership](keycloak-sso.md#adding-group-membership-to-the-token-in-keycloak).
+    Lookup detailed information in the document [adding-group-membership](/Magnolia%20SSO%20Module/Config%20examples/keycloak-sso/#adding-group-membership-to-the-token-in-keycloak).
 
 ---
 

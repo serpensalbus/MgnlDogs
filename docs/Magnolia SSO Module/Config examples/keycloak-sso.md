@@ -7,7 +7,7 @@ description: Documentation and sample about Magnolia AdminCentral login with Key
 
 !!! info
 
-    Samples and descriptions are based on **Magnolia CMS 6.2.23**, **Magnolia SSO 2.0.6** and **Keycloak 19.0.1**.
+    Samples and descriptions are based on **Magnolia CMS 6.2.x**, **Magnolia SSO** **2.0.x** / **3.0.x** and **Keycloak 19.0.x**.
 
 ## Using a recent Keycloak distribution
 
@@ -72,11 +72,17 @@ If you already defined mappers for your client, the dialog will look different:
 
 ## Magnolia SSO configuration
 
-!!! note
+!!! caution
 
-    Check the official documentation for details about [Magnolia SSO](https://docs.magnolia-cms.com/magnolia-sso/2.0.5/index.html).
+    Between Magnolia 2.x and 3.x module versions, there have been breaking changes. You need to apply matching configuration for the SSO module version that you are going to use in your project.
 
-### Example config.yaml including groups claim
+!!! tip
+
+    Check the [Magnolia documentation pages](https://docs.magnolia-cms.com) for details about the module and configuration. Enter “magnolia sso” in the search field to get to the latest documentation. If you don't use the latest version of the module, use the selector to get to the desired variant.
+
+### SSO module 2.0.x version
+
+#### Example config.yaml including groups claim
 
 ```yaml
 authenticationService:
@@ -108,17 +114,95 @@ authenticationService:
     oidc.preferredJwsAlgorithm: RS256
 ```
 
-#### Keycloak-specific values
+---
 
-The values for **callbackUrl**, **oidc.id** and **oidc.scope** are coming from your [Keycloak OIDC client](keycloak-client.md). Others, like **oidc.scope**, **oidc.discoveryUri** and **oidc.preferredJwsAlgorithm** are the default values for Keycloak according to the OpenID Connect protocol standards. 
+### SSO module 3.0.x version
+
+#### Example config.yaml including groups claim
+
+```yaml
+path: /.magnolia/admincentral
+callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
+postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
+authorizationGenerators:
+  - name: groupsAuthorization
+    groups:
+      mappings:
+        - name: superusers
+          targetRoles:
+            - superuser
+            - rest-admin
+        - name: travel-demo-editors
+          targetRoles:
+            - security-base
+            - travel-demo-editor
+            - workflow-base
+            - travel-demo-tour-editor
+            - imaging-base
+            - travel-demo-admincentral
+            - resources-base
+clients:
+  oidc.id: magnoliaAuthor
+  oidc.secret: duyhpKAFMKWbWTRyFFzk5ysfXbZj2KQd
+  oidc.scope: openid profile email
+  oidc.discoveryUri: http://localhost:8180/realms/mgnl/.well-known/openid-configuration
+  oidc.preferredJwsAlgorithm: RS256
+  oidc.authorizationGenerators: groupsAuthorization
+
+userFieldMappings:
+  name: preferred_username
+  removeEmailDomainFromUserName: true
+  removeSpecialCharactersFromUserName: false
+  fullName: name
+  email: email
+  language: locale
+```
 
 ---
 
-## More hints
+#### Example config.yaml with fixed superuser role
+
+Use this for only for initial testing and rescue operations.
+
+```yaml
+path: /.magnolia/admincentral
+callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
+postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
+authorizationGenerators:
+  - name: fixedRoleAuthorization
+    fixed:
+      targetRoles:
+        - superuser
+clients:
+  oidc.id: magnoliaAuthor
+  oidc.secret: duyhpKAFMKWbWTRyFFzk5ysfXbZj2KQd
+  oidc.scope: openid profile email
+  oidc.discoveryUri: http://localhost:8180/realms/mgnl/.well-known/openid-configuration
+  oidc.preferredJwsAlgorithm: RS256
+  oidc.authorizationGenerators: fixedRoleAuthorization
+
+userFieldMappings:
+  name: preferred_username
+  removeEmailDomainFromUserName: true
+  removeSpecialCharactersFromUserName: false
+  fullName: name
+  email: email
+  language: locale
+```
+
+---
+
+## Keycloak-specific configuration
+
+The values for **callbackUrl**, **oidc.id** and **oidc.scope** are coming from your [Keycloak OIDC client](/Common%20Security/keycloak-client/). Others, like **oidc.scope**, **oidc.discoveryUri** and **oidc.preferredJwsAlgorithm** are the default values for Keycloak according to the OpenID Connect protocol standards. 
+
+---
+
+## Keycloak group mapping
 
 ### Groups delivered as path
 
 !!! caution
 
-    This example does not have the leading “/” before the group names, as shown in the [Magnolia SSO documentation](https://docs.magnolia-cms.com/magnolia-sso/2.0.5/index.html). In former Keycloak versions, there was the default option **“Full group path”** in the protocol mapper (for including the groups claim in the token). As there is no use for Magnolia to receive a single string with several group names, this option is not needed. 
+    This example does not have the leading “/” before the group names, as shown in the [Magnolia documentation](https://docs.magnolia-cms.com). In former Keycloak versions, there was the default option **“Full group path”** in the protocol mapper (for including the groups claim in the token). As there is no use for Magnolia to receive a single string with several group names, this option is not needed. 
     But if you somehow still are using "full path" groups, then the **mapping in config.yaml** must be adjusted (*/superusers* instead of superusers and */travel-demo-editors* instead of *travel-demo-editors*).
