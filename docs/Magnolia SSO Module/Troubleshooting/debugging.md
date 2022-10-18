@@ -25,6 +25,8 @@ or make use of the [Log Tools app](https://docs.magnolia-cms.com/product-docs/6.
 
     Do not enable debug logging for security related data in productive environments. If you are forced to enable it, remember to turn it off immediately after use.
 
+---
+
 ## Examine OpenID connect token payloads 
 
 After getting detailed output for Magnolia SSO, you can track down the problem of a failed setup. For example, to see if and how the groups information was added to the user's token after authentication, you could search for **status=200** or for **profile:** and check the data:
@@ -44,3 +46,11 @@ After getting detailed output for Magnolia SSO, you can track down the problem o
 !!! tip
 
     Use a tool like [JWT.IO](https://jwt.io) to inspect OpenID Connect JWT token data (in the example above the value for “id_token”).
+
+---
+
+## If nothing seems to be wrong
+
+If everything looks good, user authentication works, also redirection to the Magnolia instance without an error message coming from the IdP like “callback URL wrong”, then the problem might be permissions on the Magnolia instance. This means the user might have been authenticated but does not have any roles assigned and therefore has no or no sufficient permissions.
+
+To narrow down this kind of issue, [create a local Magnolia user](https://docs.magnolia-cms.com/product-docs/6.2/Apps/List-of-apps/Security-app.html), assign the same groups/roles the SSO user has received and try to log in without SSO. If it does not work, [permissions are not correct](https://docs.magnolia-cms.com/product-docs/6.2/Administration/Security/Roles-and-access-control-lists.html#_evaluation_of_permissions). You have to consider that when using Magnolia SSO (at the time of writing), local logins are not possible, so you have to replicate the setup on a different instance.
