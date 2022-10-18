@@ -15,6 +15,7 @@ Either use your [Log4j configuration](https://docs.magnolia-cms.com/product-docs
 
 ```xml
 <Logger name="org.pac4j" level="DEBUG"/>
+<Logger name="com.nimbusds" level="DEBUG"/>
 <Logger name="info.magnolia.sso" level="DEBUG"/>
 ```
 
