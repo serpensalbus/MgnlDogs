@@ -78,4 +78,8 @@ After execution, you can copy & paste the result into the text editor of choice 
 
 ![Report in Numbers](_img/dam-sizes/02-numbers-export.png)
 
+---
+
 Now you are free to add some nice colors and formatting and hand the spreadsheet to your internal or external client…
+
+![Bandit im Wald](_img/dam-sizes/ban_forest.jpg)
