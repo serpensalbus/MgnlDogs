@@ -6,4 +6,6 @@ There is no guarantee outlined solutions will work, use everything at your own r
 
 ![Welcome dog](_img/bn_glasses.jpg)
 
+<a rel="me" href="https://mastodon.green/@larsolino">Contact: Mastodon</a>
+
 Perkele!
