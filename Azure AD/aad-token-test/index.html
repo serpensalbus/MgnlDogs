@@ -1,0 +1,953 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Test if the Azure AD OIDC application setup works using Postman.">
+      
+      
+      
+        <link rel="canonical" href="https://example.org/Azure%20AD/aad-token-test/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Azure AD Token Test - MgnlDogs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.472b142f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.08040f6c.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="lime">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#azure-ad-aad-token-testing-using-postman" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="MgnlDogs" class="md-header__button md-logo" aria-label="MgnlDogs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MgnlDogs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Azure AD Token Test
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="MgnlDogs" class="md-nav__button md-logo" aria-label="MgnlDogs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    MgnlDogs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Attic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Attic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Attic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_1">
+          Groovy
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Groovy" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          Groovy
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Attic/Groovy/dam-asset-size/" class="md-nav__link">
+        DAM Asset Sizes
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Azure AD
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Azure AD" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Azure AD
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Azure AD Token Test
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Azure AD Token Test
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#azure-ad-application-configuration" class="md-nav__link">
+    Azure AD application configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postman" class="md-nav__link">
+    Postman
+  </a>
+  
+    <nav class="md-nav" aria-label="Postman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtaining-configuration-values" class="md-nav__link">
+    Obtaining configuration values
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman-token-configuration" class="md-nav__link">
+    Postman token configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-token-retrieval" class="md-nav__link">
+    Test token retrieval
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorize-with-browser" class="md-nav__link">
+    Authorize with browser
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-token-content" class="md-nav__link">
+    Check token content
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems-with-token-generation" class="md-nav__link">
+    Problems with token generation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azuread-client/" class="md-nav__link">
+        Azure AD OIDC client
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Common Security
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Security" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Common Security
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Common%20Security/keycloak-client/" class="md-nav__link">
+        Keycloak OIDC client
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Magnolia SSO Module
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Magnolia SSO Module" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Magnolia SSO Module
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Config examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Config examples" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Config examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Magnolia%20SSO%20Module/Config%20examples/keycloak-sso/" class="md-nav__link">
+        Keycloak
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Magnolia%20SSO%20Module/Config%20examples/publics-multiple/" class="md-nav__link">
+        Publics Multiple Paths
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Magnolia%20SSO%20Module/Config%20examples/publics/" class="md-nav__link">
+        Publics
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Magnolia%20SSO%20Module/Troubleshooting/debugging/" class="md-nav__link">
+        Debugging
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Magnolia%20SSO%20Module/Troubleshooting/lost-access/" class="md-nav__link">
+        Lost access recovery
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#azure-ad-application-configuration" class="md-nav__link">
+    Azure AD application configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postman" class="md-nav__link">
+    Postman
+  </a>
+  
+    <nav class="md-nav" aria-label="Postman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtaining-configuration-values" class="md-nav__link">
+    Obtaining configuration values
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman-token-configuration" class="md-nav__link">
+    Postman token configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-token-retrieval" class="md-nav__link">
+    Test token retrieval
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorize-with-browser" class="md-nav__link">
+    Authorize with browser
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-token-content" class="md-nav__link">
+    Check token content
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems-with-token-generation" class="md-nav__link">
+    Problems with token generation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+
+
+
+
+<h1 id="azure-ad-aad-token-testing-using-postman">Azure AD (AAD) token testing using Postman</h1>
+<p>This article shows you how to obtain and inspect access and OpenID connect tokens without using Magnolia when your identity provider is Azure AD (AAD). This makes sure all basic settings work as intended and can help to limit the amount of work you have to put into troubleshooting.</p>
+<p>It's assumed you have configured your OpenID Connect application on AAD and the <strong>groups</strong> claim has been added to the token payload. In addition to that, testing happens on your local machine.</p>
+<p>In this text, I will use <a href="https://www.postman.com/">Postman</a>. This is a free (and wide-spread) tool with 
+convenient functions for testing your configuration.</p>
+<hr />
+<h2 id="azure-ad-application-configuration">Azure AD application configuration</h2>
+<p>The only thing you have to do on the AAD configuration side, is to add an appropriate redirect URI for the Postman test.</p>
+<p>There are several options:</p>
+<ul>
+<li>You can use a redirect URI that already exists (like http://localhost:8080/magnoliaAuthor).</li>
+<li>You add a redirect URI for localhost (http://localhost).</li>
+<li>It's also possible to use a URI provided by Postman when you want to use your browser to execute the test (https://oauth.pstmn.io/v1/callback).</li>
+</ul>
+<p><img alt="AAD Redirect URI" src="../_img/aad-token/01_redirect_uri.png" /></p>
+<p>The screenshot shows an application configuration that has all the options.</p>
+<hr />
+<h2 id="postman">Postman</h2>
+<h3 id="obtaining-configuration-values">Obtaining configuration values</h3>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>In AAD, there is a link called <em>Endpoints</em> in the <em>overview</em> of your application configuration where you can see (and copy + paste) relevant endpoint configurations.</strong></p>
+</div>
+<p><img alt="AAD Endpoints" src="../_img/aad-token/02_overview_endpoints.png" /></p>
+<p>The OpenID Connect protocol mandates a public URL for the <strong>OpenID Connect metadata document</strong>, which you can also find in the <strong>Endpoints</strong> dialog.</p>
+<p>For AAD, this URL usually looks like</p>
+<p><em>https://login.microsoftonline.com/{{your-tenant-id-or-name}}/.well-known/openid-configuration</em></p>
+<p>Calling this URL is a first test and should return a proper result. Many of the configuration options needed for connecting your application to AAD using the OpenID Connect protocol can be found in the result data.</p>
+<hr />
+<h3 id="postman-token-configuration">Postman token configuration</h3>
+<p>In Postman, create a new <strong>Collection</strong> and open the tab <em>Authorization</em>. From the select box, choose OAuth 2.0, go to <strong>Configuration Options</strong> and enter needed values.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Hint</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Token Name</strong></td>
+<td></td>
+<td>Arbitrary name</td>
+</tr>
+<tr>
+<td><strong>Callback URL</strong></td>
+<td>Defined in AAD</td>
+<td>http://localhost (see above)</td>
+</tr>
+<tr>
+<td><strong>Auth URL</strong></td>
+<td>Auth endpoint</td>
+<td>https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/authorize</td>
+</tr>
+<tr>
+<td><strong>Access Token URL</strong></td>
+<td>Token endpoint</td>
+<td>https://login.microsoftonline.com/{{tenant}}/oauth2/v2.0/token</td>
+</tr>
+<tr>
+<td><strong>Client ID</strong></td>
+<td>AAD App ID</td>
+<td>5b5ffb6c-f62e-43e5-b646-d3b782a1c03d</td>
+</tr>
+<tr>
+<td><strong>Client Secret</strong></td>
+<td>AAD Client Secret</td>
+<td>TLm8Q~s_mS9pILtPzYm~oegpGUSXoxyphGKrepip</td>
+</tr>
+<tr>
+<td><strong>Scope</strong></td>
+<td></td>
+<td>openid profile email</td>
+</tr>
+<tr>
+<td><strong>State</strong></td>
+<td>Security feature</td>
+<td>{{$randomInt}}</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Postman Token Config" src="../_img/aad-token/03_token_configuration.png" /></p>
+<p>The values for</p>
+<ul>
+<li>Callback URL (redirect URI)</li>
+<li>Client ID (application ID)</li>
+<li>Client Secret</li>
+<li>Scope</li>
+</ul>
+<p>are also needed for Magnolia SSO configuration.</p>
+<h3 id="test-token-retrieval">Test token retrieval</h3>
+<p>Click on <strong>Get New Access Token</strong>, login with your AAD credentials. If everything was OK, you should have received your new token.</p>
+<p><img alt="Postman Token OK Message" src="../_img/aad-token/04_test_token_OK.png" /></p>
+<p>The token is shown in the next screen.</p>
+<p><img alt="Postman Token Dialog" src="../_img/aad-token/05_test_token.png" /></p>
+<p>Though you can use this token to access other APIs hosted on AAD, we can end our test now because we verified that login and retrieval of the token actually works.</p>
+<hr />
+<h3 id="authorize-with-browser">Authorize with browser</h3>
+<p>You can use your browser to execute the test. You might get detailed information for troubleshooting when using this approach. Remember, you have to define the redirect URI for Postman in your AAD application configuration (https://oauth.pstmn.io/v1/callback).</p>
+<p><img alt="Postman Browser Authorization Option" src="../_img/aad-token/06_browser_auth.png" /></p>
+<hr />
+<h3 id="check-token-content">Check token content</h3>
+<p>Depending on your needs, you configured AAD to deliver group membership information in the payload of your <strong>ID token</strong>. We can decode the content with a tool like https://jwt.io.</p>
+<p><strong>Note that data like group membership is added to the id_token—be sure to copy the correct token value before verifying the payload.</strong></p>
+<p>For example, group membership looks like:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="s2">&quot;ac5db011-28d6-4738-8f3b-b84b52c41a56&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s2">&quot;3bf13aad-eead-44ee-b666-ba9669a5b120&quot;</span><span class="w"></span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">],</span><span class="w"></span>
+</code></pre></div>
+<p>AAD does not deliver group names, only the IDs.</p>
+<p>You can use the access token to resolve the names using MS Graph API, but this is a topic for a separate article.</p>
+<p>Also consider that the <strong>callback URL</strong> / <strong>redirect URI</strong> is likely to be different when using the Magnolia SSO module.</p>
+<hr />
+<h3 id="problems-with-token-generation">Problems with token generation</h3>
+<p>If you get errors while executing the steps above, keep on fixing them until you finally receive a valid ID token. Don't continue with Magnolia SSO until the whole process works.</p>
+<p><img alt="Cool Man" src="../_img/aad-token/ban_tongue.jpg" /></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../../Attic/Groovy/dam-asset-size/" class="md-footer__link md-footer__link--prev" aria-label="Previous: DAM Asset Sizes" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              DAM Asset Sizes
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../azuread-client/" class="md-footer__link md-footer__link--next" aria-label="Next: Azure AD OIDC client" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Azure AD OIDC client
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d6c3db9e.min.js"></script>
+      
+    
+  </body>
+</html>
