@@ -28,35 +28,43 @@ For me, the following combination worked (I used the docker image).
 Light module configuration decoration file for my development instance running under **http://localhost:8080/magnoliaAuthor**:
 
 ```yaml
-authenticationService:
-  path: /.magnolia/admincentral
-  callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
-  postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
-  authorizationGenerators:
-    fixedRoleAuthorizationGenerator:
-      class: info.magnolia.sso.oidc.FixedRoleAuthorizationGenerator
-      roles:
+path: /.magnolia/admincentral
+callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
+postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
+authorizationGenerators:
+  - name: fixedRoleAuthorization
+    fixed:
+      targetRoles:
         - superuser
-  pac4j:
-    oidc.id: my-client
-    oidc.secret: my-secret
-    oidc.scope: openid profile email
-    oidc.discoveryUri:  http://localhost:9090/.well-known/openid-configuration
-    oidc.preferredJwsAlgorithm: RS256
+clients:
+  oidc.id: mock-client-id
+  oidc.secret: mock-client-secret
+  oidc.scope: openid profile email
+  oidc.discoveryUri:  http://localhost:9090/.well-known/openid-configuration
+  oidc.preferredJwsAlgorithm: RS256
+  oidc.authorizationGenerators: fixedRoleAuthorization
+
+userFieldMappings:
+  name: preferred_username
+  removeEmailDomainFromUserName: true
+  removeSpecialCharactersFromUserName: false
+  fullName: name
+  email: email
+  language: locale
 ```
 
 **Docker** command: Mock server running on port 9090:
-
 ```shell
 docker run \
---env PORT=9090 \
---env CLIENT_ID=my-client \
---env CLIENT_SECRET=my-secret \
---env CLIENT_REDIRECT_URI=http://localhost:8080/magnoliaAuthor/.auth \
---env CLIENT_LOGOUT_REDIRECT_URI=http://localhost:8080/magnoliaAuthor/.magnolia/admincentral \
--p 9090:9090 \
-mgnl/mock-oidc-user-server:latest
+   --env PORT=9090 \
+   --env CLIENT_ID=mock-client-id \
+   --env CLIENT_SECRET=mock-client-secret \
+   --env CLIENT_REDIRECT_URI=http://localhost:8080/magnoliaAuthor/.auth \
+   --env CLIENT_LOGOUT_REDIRECT_URI=http://localhost:8080/magnoliaAuthor/.magnolia/admincentral \
+   -p 9090:9090 \
+   mgnl/mock-oidc-user-server:latest
 ```
+---
 
 ### Access Magnolia
 

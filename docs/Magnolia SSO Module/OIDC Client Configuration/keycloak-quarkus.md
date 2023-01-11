@@ -1,9 +1,9 @@
 ---
-title: Keycloak
+title: Keycloak Quarkus
 description: Documentation and sample about Magnolia AdminCentral login with Keycloak (Quarkus)
 ---
 
-# Magnolia SSO and Keycloak on Quarkus
+# Keycloak OIDC Client Configuration (Quarkus)
 
 !!! info
 
@@ -48,25 +48,25 @@ As the Keycloak administration interface has slightly changed with recent versio
 - In Keycloak, select your **realm** and the client you want to configure (like *magnoliaAuthor*).
 - Choose **Client scopes** → click on **clientName-dedicated**.
 
-![Add client scope](_img/keycloak-sso/01_kc_client_add_scope.png)
+![Add client scope](_img/keycloak-quarkus/01_kc_client_add_scope.png)
 
 - Click on **Add predefined mapper**.
 
-![Add client mapper](_img/keycloak-sso/02_kc_client_add_mapper.png)
+![Add client mapper](_img/keycloak-quarkus/02_kc_client_add_mapper.png)
 
 If you already defined mappers for your client, the dialog will look different:
 
 - Click on **Add mapper** and **From predefined mappers**.
 
-![Add client mapper](_img/keycloak-sso/03_kc_client_add_mapper.png)
+![Add client mapper](_img/keycloak-quarkus/03_kc_client_add_mapper.png)
 
 - Add the **groups** mapper to your client configuration.
 
-![Add groups mapper](_img/keycloak-sso/04_kc_client_add_mapper_groups.png)
+![Add groups mapper](_img/keycloak-quarkus/04_kc_client_add_mapper_groups.png)
 
 - Select the added **groups** mapper to review settings.
 
-![Add groups mapper](_img/keycloak-sso/05_kc_client_select_mapper.png)
+![Add groups mapper](_img/keycloak-quarkus/05_kc_client_select_mapper.png)
 
 ---
 
@@ -194,7 +194,7 @@ userFieldMappings:
 
 ## Keycloak-specific configuration
 
-The values for **callbackUrl**, **oidc.id** and **oidc.scope** are coming from your [Keycloak OIDC client](/Common%20Security/keycloak-client/). Others, like **oidc.scope**, **oidc.discoveryUri** and **oidc.preferredJwsAlgorithm** are the default values for Keycloak according to the OpenID Connect protocol standards. 
+The values for **callbackUrl**, **oidc.id** and **oidc.scope** are coming from your Keycloak OIDC application. Others, like **oidc.scope**, **oidc.discoveryUri** and **oidc.preferredJwsAlgorithm** are the default values for Keycloak according to the OpenID Connect protocol standards. 
 
 ---
 

@@ -1,10 +1,10 @@
 # Welcome
 
-Here you can find how-tos and samples for Magnolia CMS. The current topic is how to integrate Magnolia AdminCentral using the Magnolia SSO module with an Identity Provider like Keycloak.
+Here you can find how-tos and samples, mainly for Magnolia CMS and OpenID Connect related stuff.
 
-There is no guarantee outlined solutions will work, use everything at your own risk! You won't get support for recipes or code hosted here, but feel free reporting bugs or useful hints.
+There is no guarantee outlined solutions will work, use everything at your own risk! You won't get support for recipes or code demonstrated here, but feel free reporting bugs or useful hints.
 
-![Welcome dog](_img/bn_glasses.jpg)
+<center>![Welcome dog](_img/bn_glasses.jpg)</center>
 
 <a rel="me" href="https://mastodon.green/@larsolino">Contact: Mastodon</a>
 

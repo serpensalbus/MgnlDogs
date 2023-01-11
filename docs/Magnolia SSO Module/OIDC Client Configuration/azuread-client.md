@@ -1,5 +1,5 @@
 ---
-title: Azure AD OIDC client
+title: Azure AD
 description: Setup an OpenID Connect client using Azure AD.
 ---
 

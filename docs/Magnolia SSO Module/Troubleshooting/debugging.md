@@ -27,6 +27,16 @@ or make use of the [Log Tools app](https://docs.magnolia-cms.com/product-docs/6.
 
 ---
 
+## Check the logs of your IAM solution
+
+If the error message you get on the client side is not accurate or does not even exist, you might find the solution to your problem when checking the log capabilities of your IAM service. Sometimes it's necessary to enable logging (like in Magnolia) before getting detailed information. Examining the logs can also be helpful when the error messages you receive on your end are not clear enough or inaccurate.
+
+### Keycloak Events
+
+![Events in Keycloak](_img/debugging/kc_events.png)
+
+---
+
 ## Examine OpenID connect token payloads 
 
 After getting detailed output for Magnolia SSO, you can track down the problem of a failed setup. For example, to see if and how the groups information was added to the user's token after authentication, you could search for **status=200** or for **profile:** and check the data:
@@ -46,6 +56,71 @@ After getting detailed output for Magnolia SSO, you can track down the problem o
 !!! tip
 
     Use a tool like [JWT.IO](https://jwt.io) to inspect OpenID Connect JWT token data (in the example above the value for “id_token”).
+
+---
+
+## Username / userFieldMappings in config.yaml
+
+When using Magnolia SSO, a temporary (in-memory) user is created in memory after successful authentication. This user object requires at least a username, otherwise login will fail because of a null pointer exception. 
+The problem can be caused by the settings for **userFieldMappings** in your configuration.
+
+```yaml
+userFieldMappings:
+  name: preferred_username
+  # ...
+```
+
+The above example fails with a default **Okta** setup, because the OIDC token payload does not contain the attribute **preferred_username**. Therefore, Magnolia SSO cannot assign a username and login to Magnolia fails, even after successful authentication with the IdP.
+
+To see what is actually delivered, enable debug logging in Magnolia and inspect the actual content of token data that has been sent to your application.
+
+A working version for **Okta** (and maybe others) looks like:
+
+```yaml
+userFieldMappings:
+  name: name
+  # ...
+```
+
+From a login viewpoint, the username is the most important attribute that needs to be assigned. Others may be also significant for the logic of your application, so if you struggle to receive correct values, inspect the logs or adjust the configuration on the IdP and/or Magnolia side.
+
+---
+
+## Wrong / missing scope(s)
+
+Basically, the **scope** parameter defines the kind/amount of data the IAM service will deliver after authentication. Mostly the scope is set to **openid** and in addition **profile** and **email**, but in some cases it might be necessary to add values to or adjust the scope.
+
+Besides the standards named before, in most cases you are free to mess with scope settings on the backend of your security infrastructure. But some services might require  different scope values to receive the same result.
+
+For example, if you are going to evaluate users' groups, to need to add the **groups** value in your configuration.
+
+Consider using this scope setting:
+
+```yaml
+oidc.scope: openid profile email
+```
+
+In **Okta**, the OIDC token payload does not contain the group's data, even if you configured your application to receive this kind of information.
+
+The token data ends with the “at_hash” attribute:
+
+```json
+ "at_hash": "EJNUYPXZfpGNiM8maVimqQ"
+}
+```
+
+If groups are configured and the scope contain **groups**, group information is provided:
+
+```json
+"at_hash": "2Ednv-6g0NPAmhUU3sy52g",
+  "groups": [
+    "Everyone",
+    "magnolia-superusers",
+    "travel-demo-editors",
+    "magnolia-users",
+  ]
+}
+```
 
 ---
 

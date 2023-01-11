@@ -1,6 +1,6 @@
 ---
 title: Publics Multiple Paths
-description: SSO Maodule on Magnolia public instances with different paths and filters. 
+description: SSO Module on Magnolia public instances with different paths and filters. 
 ---
 
 # Magnolia SSO usage on public instances with different paths and filters
@@ -42,10 +42,10 @@ We set the path dynamically when a user tries to access a protected URL.
 
 The sample website has 3 different member sections:
 
-- “Members”´: Has a protected member area that needs login if hosted on “localhost”. On “localhost” login with Azure AD.
-- “Members one”: Same as members, but has a different path. On “localhost” login with Azure AD.
-- “Members two”: Has a different path and as condition a *hostPattern* that is not localhost. On *localhost* login is blocked by showing the Magnolia login form (in this sample).
-- AdminCentral (/.magnolia/admincentral): Local Magnolia login form (in this sample).
+- **Members**: Has a protected member area that needs login if hosted on “localhost”. On “localhost” login with Azure AD.
+- **Members one**: Same as members, but has a different path. On “localhost” login with Azure AD.
+- **Members two**: Has a different path and as condition a *hostPattern* that is not localhost. On *localhost* login is blocked by showing the Magnolia login form (in this sample).
+- **AdminCentral** (/.magnolia/admincentral): Local Magnolia login form (in this sample).
 
 ---
 
