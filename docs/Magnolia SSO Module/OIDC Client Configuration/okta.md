@@ -212,7 +212,7 @@ userFieldMappings:
 
 !!! important
 
-    Okta adding **groups** to the scope configuration. Otherwise, group data will not be delivered with the authenticated user data!
+    Okta requires adding **groups** to the scope configuration. Otherwise, group data will not be delivered with the authenticated user data!
 
 **Test the setup:**
 
