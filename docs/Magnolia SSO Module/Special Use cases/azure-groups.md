@@ -154,11 +154,7 @@ authorizationGenerators:
       targetRoles:
         - superuser
   - name: dummyAuthorizationGenerator
-    groups:
-      mappings:
-        - name: dummy
-          targetRoles:
-            - dummy
+  
 clients:
   oidc.id: 7b5bbb6c-f71f-52e4-b646-d3b332a1c10e
   oidc.secret: TXm9Q~s_tS2iILqPzYm~jqwaGUIQoxyphGKrecip
@@ -180,7 +176,7 @@ userFieldMappings:
 
 !!! note
 
-    Adapt this configuration to your setup! My example runs under the /magnoliaAuthor context. The Azure AD values are fake!    
+    Adapt this configuration to your setup! My example runs under the /magnoliaAuthor context. The Azure AD values are fake!
     
 ---
 
@@ -460,11 +456,7 @@ callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
 postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
 authorizationGenerators:
   - name: dummyAuthorizationGenerator
-    groups:
-      mappings:
-        - name: dummy
-          targetRoles:
-            - dummy
+    
 clients:
   oidc.id: 7b5bbb6c-f71f-52e4-b646-d3b332a1c10e
   oidc.secret: TXm9Q~s_tS2iILqPzYm~jqwaGUIQoxyphGKrecip
@@ -487,6 +479,10 @@ userFieldMappings:
 !!! note
 
     Don't forget to adjust the values from Azure AD including the **TENANT** in oidc.discoveryUri!
+
+    The "dummyAuthorizationGenerator" part or something similar must be kept in the configuration, because without "authorizationGenerators" the SSO module will not start.
+    It's also not possible to use the "authorizationGenerators" section in the same way as the default class for your custom authorization generator (adding mappings, etc.).
+    On the other hand, you can use a custom authorization generator to get rid of the mappings completely and use groups in Magnolia that encapsulate roles/permissions.    
 
 ---
 
