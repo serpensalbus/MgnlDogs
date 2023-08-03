@@ -1,27 +1,27 @@
 ---
 title: Azure AD Group/Permission Assignment
-description: How to configure Magnolia SSO using Azure AD together with a custom group authenticator. 
+description: How to configure Magnolia SSO using Azure AD along with a custom group authenticator.
 ---
 
 # Azure AD and Magnolia SSO custom group authentication
 
 !!! note
 
-    This article is based on **Magnolia SSO 3.1.3** and **Magnolia CMS 6.2.33** (you need an Enterprise license). You cannot use the same configuration with SSO 2.x, but the logic of group resolution in combination with Azure AD is the same. In Azure, it's possible to configure application roles, but this is not covered in this article. If you want to get rid of the role mapping requirement in the SSO YAML configuration file, you can use the solution in this tutorial for other identity providers using your own custom classes.
+	The content is based on **Magnolia SSO 3.1.5** and **Magnolia CMS 6.2.37** (you need an Enterprise licence). You cannot use the same configuration with SSO 2.x, but the logic of group resolution in combination with Azure AD is the same. It's possible to configure application roles in Azure, but this is not covered in this article. If you want to get rid of the role mapping requirement in the SSO YAML configuration file, you can use the solution in this tutorial for other identity providers using your own custom classes.
 
-This article shows you how to use a custom authentication class with Magnolia SSO with Azure AD. The reasons for using this approach may be
+This article shows you how to use a custom authentication class with Magnolia SSO with Azure AD. Reasons for using this approach may be
 
-- You want to manage users, groups, and permissions using only Azure AD.
-- You don't want to deal with cryptic IDs instead of group/role names: Azure AD does not put names in the token payload by default, only IDs.
+- You want to manage users, groups and permissions using only Azure AD.
+- You don't want to deal with cryptic IDs instead of group/role names: Azure AD does not include names in the token payload by default, only IDs.
 - Permissions management in your environment is complex and/or flexible.
-- People administering Azure AD cannot (or should not) work with YAMl files in a Magnolia installation.
+- People managing Azure AD cannot (or should not) work with YAMl files in a Magnolia installation.
 
-Please review and apply the [Azure AD OpenID Connect client setup](/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/#register-a-magnolia-client) before starting this tutorial.
-If in doubt, you may want to begin with [Azure AD (AAD) token testing using Postman](/Security%20IAM%20SSO/aad-token-test/) before working with Magnolia.
+Please review and apply the [Azure AD OpenID Connect client setup](/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/#register-a-magnolia-client) before starting this tutorial. If in doubt, start with [Azure AD (AAD) token testing using Postman](/Security%20IAM%20SSO/aad-token-test/) before working with Magnolia.
+
 
 ---
 
-It can be quite a challenge to get all the pieces working with this kind of integration. In the beginning you might feel like this:
+It can be quite a challenge to get all the pieces working with this kind of integration. You might feel that way at first:
 
 ![Grasdackel](_img/azuread-groups/grasdackel.jpg)
 
@@ -29,33 +29,34 @@ This article will hopefully help make that task easier!
 
 ---
 
-## How Azure AD delivers group information
+##How Azure AD delivers group information
 
 ### Group information in the token payload
 
-Basically, you can configure Azure AD to deliver group information within the payload of the OpenID Connect token that is delivered to Magnolia **after a user has successfully authenticated**.
+Basically, you can configure Azure AD to deliver group information within the payload of the OpenID Connect token that is delivered to Magnolia after a user has successfully authenticated.
 
-See [Add groups to the token](/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/#add-groups-to-the-token) on how to configure the token.
+See [Adding groups to the token](/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/#add-groups-to-the-token) for information on how to configure the token.
 See also [Debugging](/Magnolia%20SSO%20Module/Troubleshooting/debugging/) for information on how to view the contents of the tokens delivered to Magnolia.
 
-The Azure AD group information delivered in the token payload looks like this:
+The Azure AD group information provided in the token payload looks like this
 
 ![Azure AD group information in token payload](_img/azuread-groups/01_azure_token_groupids.png)
 
-You can map the group IDs in a Magnolia SSO YAML configuration file to apply the required permissions. This is covered in the [official documentation](https://docs.magnolia-cms.com/magnolia-sso/3.1.3/index.html).
+You can map the group IDs in a Magnolia SSO YAML configuration file to apply the required permissions. This is covered in the [official documentation](https://docs.magnolia-cms.com/magnolia-sso/3.1.5/index.html).
 
 ### No group information
 
-If there is no group information available in the token data, you can still use MS Graph to query group information once users have obtained the required bearer token.
-You will still need to provide the appropriate security configuration in Azure AD, see [API permissions](/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/#api-permissions).
+If there is no group information available in the token data, you can still use MS Graph to query group information once users have obtained the required bearer token. You will still need to provide the appropriate security configuration in Azure AD, see [API permissions](/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/#api-permissions).
+
 
 ---
 
-## Azure AD with a custom authorization generator
+
+## Azure AD with a custom authorisation generator
 
 You will need a custom Magnolia module (Maven/Java) to use this solution. I will not cover how to do this because if you are missing the basics, this article is not for you.
 
-See the [Custom authorization generators](https://docs.magnolia-cms.com/magnolia-sso/3.1.3/guides/custom-auth-generators.html) for more information.
+See [Custom authorization generators](https://docs.magnolia-cms.com/magnolia-sso/3.1.3/guides/custom-auth-generators.html) for more information.
 
 ### Service Provider Interface (SPI)
 
@@ -63,11 +64,11 @@ In your custom module, navigate to (create the **service** directory)
 
 `src/main/resources/META-INF/service`
 
-and create a text file named
+and create a text file called
 
 `info.magnolia.sso.config.spi.AuthorizationGeneratorProvider`
 
-Add the name of your custom provider to the file, such as
+Add the name of your custom provider to the file, for example
 
 `info.magnolia.sso.auth.azure.CustomAzureAdAuthorizationGeneratorProvider`
 
@@ -82,7 +83,7 @@ Add the Magnolia SSO dependency to your Maven **pom.xml**:
 <dependency>
   <groupId>info.magnolia.sso</groupId>
   <artifactId>magnolia-sso</artifactId>
-  <version>3.1.3</version>
+  <version>3.1.5</version>
 </dependency>
 ...
 ```
@@ -102,7 +103,7 @@ and to the module descriptor file /src/main/resources/META-INF/magnolia/**your-m
 
 ### Custom classes
 
-Create the Java class for your **custom authorization generator**.
+Create the Java class for your **custom authorisation generator**.
 
 ```java
 package info.magnolia.sso.auth.azure;
@@ -136,15 +137,16 @@ public class CustomAzureAdAuthorizationGeneratorProvider implements info.magnoli
 
 ---
 
-### Magnolia SSO configuration
 
-I recommend having some sort of fallback configuration so that you can see that your project is running and your custom provider is being invoked.
-Magnolia SSO configuration is not very consistent, you cannot assume that you can apply the configuration to all possible providers in the same way/syntax. The example assumes *superuser access*.
+### Magnolia SSO Configuration
+
+I recommend that you have some sort of fallback configuration so that you can see that your project is running and your custom provider is being invoked. The Magnolia SSO configuration is not very consistent, you cannot assume that you can apply the configuration to all possible providers in the same way/syntax. The example assumes *superuser access*.
 
 **Basic config.yaml example for Azure AD:**
 
+
 ```yaml
-# tested with SSO 3.1.3
+# tested with SSO 3.1.5
 path: /.magnolia/admincentral
 callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
 postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
@@ -153,7 +155,6 @@ authorizationGenerators:
     fixed:
       targetRoles:
         - superuser
-  - name: dummyAuthorizationGenerator
   
 clients:
   oidc.id: 7b5bbb6c-f71f-52e4-b646-d3b332a1c10e
@@ -163,7 +164,7 @@ clients:
   # use your tenant from Azure AD - you will need the value later for the custom provider class
   oidc.discoveryUri: https://login.microsoftonline.com/f7c33569-d9fg-87e6-a2af-3e4feq02310c/v2.0/.well-known/openid-configuration
   oidc.preferredJwsAlgorithm: RS256  
-  oidc.authorizationGenerators: fixedRoleAuthorization,dummyAuthorizationGenerator,CustomAzureAdAuthorizationGeneratorProvider
+  oidc.authorizationGenerators: fixedRoleAuthorization,CustomAzureAdAuthorizationGeneratorProvider
 
 userFieldMappings:
   name: preferred_username
@@ -176,28 +177,30 @@ userFieldMappings:
 
 !!! note
 
-    Adapt this configuration to your setup! My example runs under the /magnoliaAuthor context. The Azure AD values are fake!
+	Adapt this configuration to your setup! My example runs under the /magnoliaAuthor context. The Azure AD values are fake!
     
 ---
 
 !!! tip
 
-    **Build and launch your project, open Magnolia AdminCentral. Login with an Azure AD user account, the login should work with superuser privileges.**
-    **In the Magnolia log file, you should see the log message we put in the skeleton of our custom authentication generator class.**
-    If Magnolia does not start and tells you that something is wrong with your module, there is most likely a problem with the **syntax of config.yaml**.
+	**Build and launch your project and open Magnolia AdminCentral. Login with an Azure AD user account, the login should work with superuser privileges.**
+	**In the Magnolia log file, you should see the log message we put in the skeleton of our custom authentication generator class.**
+	If Magnolia does not start and tells you that something is wrong with your module, there is most likely a problem with the **syntax of config.yaml**.
+
 
 ---
 
-## Add logic to your custom authentication
 
-### Custom authentication generator logic
+##Add logic to custom authentication
+
+### Custom Authentication Generator Logic
 
 The **generate method** checks for a **groups** attribute in the payload of the OIDC token.
 
 - The **groups** attribute is **found**: Take the array of group IDs and resolve the names using MS Graph and the authenticated user's bearer token.
 - **No groups** attribute: MS Graph and the bearer token are used to query the groups owned by the authenticated user.
 - All resolved group **names** are added to the PAC4J OIDC profile under the name **mgnlGroups**.
-- After that, the normal flow of the Magnolia SSO module continues, retrieving the groups from the profile, matching them to the ones in Magnolia, and applying permissions.
+- The normal flow of the Magnolia SSO module then continues, retrieving the groups from the profile, matching them to those in Magnolia, and applying permissions.
 
 With this approach, loading roles from groups in Magnolia works, and you don't end up having to do manual role mapping in config.yaml. This is something that did not work for me without the custom authenticator.
 
@@ -450,12 +453,10 @@ I recommend leaving the config.yaml as is and checking the log files. If everyth
 **config.yaml**
 
 ```yaml
-# tested with SSO 3.1.3
+# tested with SSO 3.1.5
 path: /.magnolia/admincentral
 callbackUrl: http://localhost:8080/magnoliaAuthor/.auth
 postLogoutRedirectUri: http://localhost:8080/magnoliaAuthor/.magnolia/admincentral
-authorizationGenerators:
-  - name: dummyAuthorizationGenerator
     
 clients:
   oidc.id: 7b5bbb6c-f71f-52e4-b646-d3b332a1c10e
@@ -465,7 +466,7 @@ clients:
   # use your tenant from Azure AD
   oidc.discoveryUri: https://login.microsoftonline.com/f7c33569-d9fg-87e6-a2af-3e4feq02310c/v2.0/.well-known/openid-configuration
   oidc.preferredJwsAlgorithm: RS256
-  oidc.authorizationGenerators: dummyAuthorizationGenerator,CustomAzureAdAuthorizationGeneratorProvider
+  oidc.authorizationGenerators: CustomAzureAdAuthorizationGeneratorProvider
 
 userFieldMappings:
   name: preferred_username
@@ -478,23 +479,24 @@ userFieldMappings:
 
 !!! note
 
-    Don't forget to adjust the values from Azure AD including the **TENANT** in oidc.discoveryUri!
+	Don't forget to adjust the values from Azure AD including the **TENANT** in oidc.discoveryUri!
 
-    The "dummyAuthorizationGenerator" part or something similar must be kept in the configuration, because without "authorizationGenerators" the SSO module will not start.
-    It's also not possible to use the "authorizationGenerators" section in the same way as the default class for your custom authorization generator (adding mappings, etc.).
-    On the other hand, you can use a custom authorization generator to get rid of the mappings completely and use groups in Magnolia that encapsulate roles/permissions.    
+	It's  not possible to use the "authorizationGenerators" section in the same way as the default class for your custom authorisation generator (adding mappings, etc.).
+	On the other hand, you can use a custom authorisation generator to get rid of the mappings completely and use groups in Magnolia that encapsulate roles/permissions.
 
 ---
 
-## Testing 
+
+## Testing
 
 - Test with a user who has **no group assignments** - you should get a 403 error because there are no groups => no permissions.
 - Test with a user who has groups that match the Magnolia groups, e.g. **travel-demo-editors** => login with correct permissions (the local Magnolia groups must match).
 
 Check [Debugging](/Magnolia%20SSO%20Module/Troubleshooting/debugging/) if it does not work …
 
+
 ## Finally
 
-If everything works as it should, groups can also be a very relaxing experience ...
+When everything works as it should, groups can also be a very relaxing experience ...
 
 ![Dogs group](_img/azuread-groups/group_work.jpg)
