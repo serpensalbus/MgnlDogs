@@ -12,4 +12,4 @@ if (! docker stats --no-stream ); then
   done
 fi
 
-docker run --rm -it -p 8090:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+docker run --rm -it -p 8099:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
