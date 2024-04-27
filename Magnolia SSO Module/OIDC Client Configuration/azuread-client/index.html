@@ -1,0 +1,1237 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Setup an OpenID Connect client using Azure AD.">
+      
+      
+      
+        <link rel="canonical" href="https://example.org/Magnolia%20SSO%20Module/OIDC%20Client%20Configuration/azuread-client/">
+      
+      
+        <link rel="prev" href="../auth0/">
+      
+      
+        <link rel="next" href="../keycloak-quarkus/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.19">
+    
+    
+      
+        <title>Azure AD - MgnlDogs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.66ac8b77.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="lime">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#azure-ad-openid-connect-client-setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="MgnlDogs" class="md-header__button md-logo" aria-label="MgnlDogs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MgnlDogs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Azure AD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="lime"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="MgnlDogs" class="md-nav__button md-logo" aria-label="MgnlDogs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    MgnlDogs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Magnolia SSO Module
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Magnolia SSO Module
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OIDC Client Configuration
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            OIDC Client Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../auth0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Auth0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Azure AD
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Azure AD
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#register-a-magnolia-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register a Magnolia client
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Register a Magnolia client">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hints-about-the-redirect-callback-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hints about the redirect / callback URLs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Client configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      Client secret
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      API permissions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-groups-to-the-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add groups to the token
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Add groups to the token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oidc-token-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      OIDC token sample
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#users-and-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Users and groups
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Users and groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-and-group-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      User and group example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User and group example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure-ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Azure AD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magnolia-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      Magnolia author
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keycloak-quarkus/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Quarkus
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keycloak-wildfly/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keycloak Wildfly
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../okta/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Okta
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Special Use cases
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Special Use cases
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Special%20Use%20cases/author-mutiple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Author Multiple Handlers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Special%20Use%20cases/azure-groups/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Azure AD Group/Permission Assignment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Special%20Use%20cases/publics-multiple/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publics Multiple Paths
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Special%20Use%20cases/publics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Publics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Troubleshooting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Troubleshooting/debugging/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Debugging
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Troubleshooting/lost-access/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lost access recovery
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Mgnl Stuff
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Mgnl Stuff
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mgnl%20Stuff/dam-asset-size/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DAM Asset Sizes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Security IAM SSO
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Security IAM SSO
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Security%20IAM%20SSO/aad-token-test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Azure AD Token Test
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#register-a-magnolia-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register a Magnolia client
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Register a Magnolia client">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hints-about-the-redirect-callback-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hints about the redirect / callback URLs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Client configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      Client secret
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      API permissions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-groups-to-the-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add groups to the token
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Add groups to the token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oidc-token-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      OIDC token sample
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#users-and-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Users and groups
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Users and groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-and-group-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      User and group example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User and group example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure-ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Azure AD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magnolia-author" class="md-nav__link">
+    <span class="md-ellipsis">
+      Magnolia author
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="azure-ad-openid-connect-client-setup">Azure AD OpenID Connect client setup</h1>
+<p>Event though not directly related to Magnolia CMS, developers, and clients keep asking for information about how to set up an OIDC client with Azure AD.</p>
+<p>This step-by-step guide was created in October 2022, and I used <a href="https://entra.microsoft.com/">Microsoft Entra admin center</a> to create the example client. Of course, you can also use <a href="https://portal.azure.com/">Azure Portal</a> and select Azure AD.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Azure AD is quite dynamic regarding the user interface because there are many changes. The screenshots might look different after some time has passed, but core functionality rarely changes, especially as essential configuration options are given by the OIDC protocol standard.</p>
+</div>
+<h2 id="register-a-magnolia-client">Register a Magnolia client</h2>
+<p>In Azure Active Directory, create a new “app registration”.</p>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/01_app_registration1.png" /></p>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/02_app_registration2.png" /></p>
+<p>Specify a distinctive <strong>name</strong> and <strong>redirect URI</strong>, also known as <strong>callback URL</strong>. Azure AD will use this address to redirect to after the first contact. It has to be known upfront for any client and has to match with the value Magnolia sends to Azure AD.
+You can have more than one redirect URI, but it has to match with the Magnolia one, otherwise the IdP will refuse authentication.</p>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/03_app_registration3.png" /></p>
+<h3 id="hints-about-the-redirect-callback-urls">Hints about the redirect / callback URLs</h3>
+<ul>
+<li>The protocol must be <strong>HTTPS</strong>, unless you are using localhost.</li>
+<li>You can specify more than one URI, but the one you are going to use in your Magnolia SSO config.yaml has to be known upfront to the Azure AD client configuration.</li>
+<li>It's not possible to enter a wildcard value into the field for redirect URI, but you can edit the application manifest and edit it there.</li>
+</ul>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/04_app_registration-manifest.png" /></p>
+<hr />
+<h3 id="client-configuration">Client configuration</h3>
+<p>After registration, a few other things have to be defined. In the overview, copy the values for <strong>Application (client) ID</strong> and <strong>Directory (tenant) ID</strong> to a text editor, you will need them later.</p>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/05_app_registration-advanced.png" /></p>
+<hr />
+<h3 id="client-secret">Client secret</h3>
+<p>Next, create a secret for your application:</p>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/06_app_registration-secret.png" /></p>
+<p>Please consider security objectives in your organization and adjust them accordingly.</p>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/07_app_registration-secret-new.png" /></p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>After creation, <strong>copy the client secret to a text editor</strong>, and remember that the dialog with the value of the secret will not be shown again. If you “lost” the value, you will have to create a new one. Also note that there is an expiration date, so you will have to provide a new secret in time and update Magnolia configurations accordingly.</p>
+</div>
+<p><img alt="Azure AD app registration" src="../_img/azuread-client/08_app_registration-secret-value.png" /></p>
+<hr />
+<h2 id="api-permissions">API permissions</h2>
+<p>After authentication, we use the <strong>access token</strong> to request information about the logged-in user like name, email, groups, etc.
+Therefore, we need to add permissions for the client to be allowed to query user information from MS Graph.</p>
+<p>Open the <strong>API permissions</strong> dialog for your client, and add permissions:</p>
+<p><img alt="Azure AD API permissions" src="../_img/azuread-client/09_api-permissions.png" /></p>
+<p>Select <strong>Microsoft Graph</strong>:</p>
+<p><img alt="Azure AD API permissions" src="../_img/azuread-client/10_api-permissions2.png" /></p>
+<p>Choose <strong>Delegated Permissions</strong>:</p>
+<p><img alt="Azure AD API permissions" src="../_img/azuread-client/11_api-permissions3.png" /></p>
+<p>Use the search box to find <strong>Directory.Read.All</strong>, select and add the permission:</p>
+<p><img alt="Azure AD API permissions" src="../_img/azuread-client/12_api-permissions4.png" /></p>
+<p><strong>Grant admin consent</strong> for the permissions and <strong>confirm</strong>:</p>
+<p><img alt="Azure AD API permissions" src="../_img/azuread-client/13_api-permissions5.png" /></p>
+<p>The settings for <strong>API permissions</strong> should look like:</p>
+<p><img alt="Azure AD API permissions" src="../_img/azuread-client/14_api-permissions6.png" /></p>
+<hr />
+<h2 id="add-groups-to-the-token">Add groups to the token</h2>
+<p>This step is optional if group information stored on Azure AD is not required for compiling permissions on your Magnolia instance (which means all users get a fixed permission set, which is unusual on author instances).</p>
+<p>By default, group membership of a user is not contained in the token payload Magnolia receives from Azure AD, so we need to add it:</p>
+<p><img alt="Azure AD token groups claim" src="../_img/azuread-client/15_token-groups-add.png" /></p>
+<p><img alt="Azure AD token groups claim" src="../_img/azuread-client/16_token-groups-add2.png" /></p>
+<p>The token configuration should look like this:</p>
+<p><img alt="Azure AD token groups claim" src="../_img/azuread-client/17_token-groups-add3.png" /></p>
+<hr />
+<h4 id="oidc-token-sample">OIDC token sample</h4>
+<p>The OIDC token payload contains information about a user’s groups:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="s2">&quot;c7ac9be3-135c-44e3-bdca-af908715443f&quot;</span><span class="p">,</span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="s2">&quot;https://login.microsoftonline.com /yourtenant/v2.0&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">&quot;iat&quot;</span><span class="p">:</span><span class="mi">1649757001</span><span class="p">,</span><span class="nt">&quot;nbf&quot;</span><span class="p">:</span><span class="mi">1649757001</span><span class="p">,</span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="mi">1649760901</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">&quot;groups&quot;</span><span class="p">:[</span><span class="s2">&quot;d12cc129-345e-4777-964b-c54371f9da27&quot;</span><span class="p">],</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Wuffi Schnueffelheimer&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">&quot;oid&quot;</span><span class="p">:</span><span class="s2">&quot;2491d051-d17c-402e-8322-5fba35c0c897&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">&quot;preferred_username&quot;</span><span class="p">:</span><span class="s2">&quot;wuffi@yourtenant.onmicrosoft.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">&quot;rh&quot;</span><span class="p">:</span><span class="s2">&quot;0.ATEAaZWz9vzZ5kijrTxPvAIinOObrMdcE-NEvcqvkIcVRD8xAD0.&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="s2">&quot;Q7qnV6FtK3uDKVhPvArc0fc_v9pC6jeD8R-5URQJp4w&quot;</span><span class="p">,</span><span class="nt">&quot;tid&quot;</span><span class="p">:</span><span class="s2">&quot;f6b39569-d9fc-48e6-a3ad-3c4 fbc02229c&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">&quot;uti&quot;</span><span class="p">:</span><span class="s2">&quot;vzIfuMHyhEuapFqXBsfaAA&quot;</span><span class="p">,</span><span class="nt">&quot;ver&quot;</span><span class="p">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>Without the previous configuration, group data would not be available on the Magnolia instance.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>As seen in the example above, <strong>Azure AD does deliver groups with their IDs and not with their name</strong>. This means that Magnolia has to resolve the names by calling an MS Graph API together with the access token it has received after a user has successfully authenticated.</p>
+</div>
+<hr />
+<h2 id="users-and-groups">Users and groups</h2>
+<p>In the described setup, a user who has authenticated with Azure AD needs at least one group assigned. Otherwise, authentication might work, but there would be no sufficient permissions on the Magnolia instance unless every user has fixed role/group assignments.</p>
+<h3 id="user-and-group-example">User and group example</h3>
+<h4 id="azure-ad">Azure AD</h4>
+<p><strong>Create</strong> a new <strong>user</strong> and <strong>assign</strong> a <strong>group</strong>:</p>
+<p><img alt="Azure AD user and group" src="../_img/azuread-client/18_test-user-and-group.png" /></p>
+<p>The user in the sample screenshot has the group <strong>superusers</strong> assigned.</p>
+<hr />
+<h4 id="magnolia-author">Magnolia author</h4>
+<p>Magnolia SSO does not map groups/roles delivered with the user to the ones defined in Magnolia directly. In the configuration, you have to create a mapping to match groups/roles for compilation of access rights within Magnolia.</p>
+<p>As Azure AD does not deliver the names of groups within the OIDC token payload but instead their unique IDs, you have to create the mappings using the identifiers.</p>
+<p><img alt="Azure AD group mapping" src="../_img/azuread-client/19_group-mapping-azure.png" /></p>
+<p>You can make the SSO configuration more readable by adding comments with the name of the group defined in Azure AD.</p>
+<p>Example with comments in a <em>Magnolia SSO 2.0.x</em> configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">authorizationGenerators</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">groupsAuthorizationGenerator</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info.magnolia.sso.oidc.GroupsAuthorizationGenerator</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">mappings</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">d12cc129-345e-4777-964b-c54371f9da27</span><span class="p">:</span><span class="w">  </span><span class="c1"># superusers</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">roles</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">superuser</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rest-admin</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">ac5db011-28d6-4738-8f3b-b83b52c41a56</span><span class="p">:</span><span class="w">  </span><span class="c1"># travel-demo-editors</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="nt">roles</span><span class="p">:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security-base</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">travel-demo-editor</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workflow-base</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">travel-demo-tour-editor</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">imaging-base</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">travel-demo-admincentral</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources-base</span>
+</code></pre></div>
+<p>The comments are the names of the groups as they are defined in Azure AD (<em>superusers</em>, <em>travel-demo-editors</em>).</p>
+<p><img alt="Workaround" src="../_img/azuread-client/bn_pig.jpg" /></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      
+    
+  </body>
+</html>
